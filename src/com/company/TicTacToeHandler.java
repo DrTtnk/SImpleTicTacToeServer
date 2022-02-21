@@ -13,22 +13,20 @@ public class TicTacToeHandler implements HttpHandler {
     // http://localhost:8001/ticTacToe?posI={qualcosa}&posJ={qualcosaltro}
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        String response = exchange.getRequestURI().toString();
-
-        var parameters = QueryParameter.parse(response);
+        var parameters = QueryParameter.parse(exchange.getRequestURI().toString());
 
         TicTacToeService.getGame().makeMove(
                 Integer.parseInt(parameters[0].value), // <- i
                 Integer.parseInt(parameters[1].value)  // <- j
         );
 
-        var requestBody = TicTacToeService.getGame().toString();
+        var response = TicTacToeService.getGame().toString();
 
         System.out.println("Body");
-        System.out.println(requestBody);
+        System.out.println(response);
 
-        exchange.sendResponseHeaders(200, requestBody.length());
-        exchange.getResponseBody().write(requestBody.getBytes());
+        exchange.sendResponseHeaders(200, response.length());
+        exchange.getResponseBody().write(response.getBytes());
         exchange.close();
     }
 }
